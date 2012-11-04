@@ -7,7 +7,8 @@ class Document {
 
 
 	/* ATTRIBUTES */
-	private $name;
+	private $title;
+	private $author;
 	private $content;
 	private $subdocuments = [ ];
 
@@ -16,7 +17,7 @@ class Document {
 	/* PUBLIC */
 	public function __construct( $path ) {
 		$this->init_content( $path );
-		// TODO: Parse data
+		$this->init_datas( $path );
 		// TODO: Parse subdocument
 	}
 	public function to_html( ) {
@@ -25,6 +26,11 @@ class Document {
 		$html = ob_get_contents();
 		ob_end_clean();
 		return $html;
+	}
+	public function to_print( $theme = 'default' ) {
+		define( 'THEME', $theme );
+		require( template_path( 'index' ) );
+		die;
 	}
 
 
@@ -36,10 +42,26 @@ class Document {
 			$this->content = Markdown( file_get_contents( $content_file ) );
 		}
 	}
-
+	protected function init_datas( $path ) {
+		$attributes = array_keys( get_object_vars( $this ) );
+		$datas_file = $path . '.json';
+		$datas = json_decode( file_get_contents( $datas_file ), TRUE );
+		foreach ( $datas as $key => $data ) {
+			if ( $data != 'content' && $data != 'subdocuments' && in_array( $key, $attributes ) ) {
+				$this->$key = $data;
+			}
+		}
+	}
 
 
 	/* PROTECTED GETTER */
+	private function get_subdocuments_to_html( ) {
+		$html = '';
+		foreach ( $this->subdocuments as $document ) {
+			$html .= $document->to_html( );
+		}
+		return $html;
+	}
 	protected function get_template_path( ) {
 		return template_path( $this->get_class_name( ) );
 	}
