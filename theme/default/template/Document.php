@@ -1,6 +1,3 @@
-<?php
 
-echo $this->content;
-echo $this->get_subdocuments_to_html( );
-
-?>
+<?= $this->content; ?>
+<?= $this->get_subdocuments_to_html( ) ?>

@@ -7,17 +7,26 @@ class Document {
 
 
 	/* ATTRIBUTES */
-	private $title;
-	private $author;
-	private $content;
-	private $subdocuments = [ ];
+	protected $title;
+	protected $author;
+	protected $content;
+	protected $subdocuments = [ ];
 
 
 
 	/* PUBLIC */
-	public function __construct( $path ) {
+	public static function instance( $path ) {
+		$datas = self::get_datas( $path );
+		$class_name = 'Document';
+		if ( isset( $datas[ 'type' ] ) ) {
+			$class_name = $datas[ 'type' ];
+		}
+		$class_name = __NAMESPACE__ . '\\' . $class_name;
+		return new $class_name( $path, $datas );
+	}
+	public function __construct( $path, $datas = NULL ) {
 		$this->init_content( $path );
-		$this->init_datas( $path );
+		$this->init_datas( $path, $datas );
 		// TODO: Parse subdocument
 	}
 	public function to_html( ) {
@@ -37,17 +46,19 @@ class Document {
 
 	/* PROTECTED INITIALIZER */
 	protected function init_content( $path ) {
-		$content_file = $path . '.md';
-		if ( is_file( $content_file ) ) {
-			$this->content = Markdown( file_get_contents( $content_file ) );
-		}
+		$this->content = $this->get_content( $path );
 	}
-	protected function init_datas( $path ) {
+	protected function init_subcontent( $path, $type ) {
+		$attribute = 'content_' . $type;
+		$this->$attribute = $this->get_content( $path . '-' . $type );
+	}
+	protected function init_datas( $path, $datas = NULL ) {
 		$attributes = array_keys( get_object_vars( $this ) );
-		$datas_file = $path . '.json';
-		$datas = json_decode( file_get_contents( $datas_file ), TRUE );
+		if ( is_null( $datas ) ) {
+			$datas = self::get_datas( $path );
+		}
 		foreach ( $datas as $key => $data ) {
-			if ( $data != 'content' && $data != 'subdocuments' && in_array( $key, $attributes ) ) {
+			if ( in_array( $key, $attributes ) ) {
 				$this->$key = $data;
 			}
 		}
@@ -66,7 +77,29 @@ class Document {
 		return template_path( $this->get_class_name( ) );
 	}
 	protected function get_class_name( ) {
-		return substr( __CLASS__, strlen ( __NAMESPACE__ ) + 1 );
+		return substr( get_class( $this ), strlen ( __NAMESPACE__ ) + 1 );
+	}
+
+
+
+	/* UTILS */
+	protected function get_content( $path ) {
+		$content_file = $path . '.md';
+		if ( is_file( $content_file ) ) {
+			return Markdown( file_get_contents( $content_file ) );
+		}
+		return '';
+	}
+	public static function get_datas( $path ) {
+		$datas_file = $path . '.json';
+		$banned = [ 'content', 'subdocuments' ];
+		$datas = json_decode( file_get_contents( $datas_file ), TRUE );
+		foreach ( array_keys( $datas ) as $key ) {
+			if ( in_array( $key, $banned ) ) {
+				unset( $datas[ $key ] );
+			}
+		}
+		return $datas;
 	}
 
 
