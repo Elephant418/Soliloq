@@ -1,11 +1,12 @@
-
-<div class="cover">
-	<div class="from">
-		<?= $this->content_from; ?>
+<div class="document cover">
+	<div class="header">
+		<div class="from">
+			<?= $this->content_from ?>
+		</div>
+		<div class="to">
+			<?= $this->content_to ?>
+		</div>
 	</div>
-	<div class="to">
-		<?= $this->content_to; ?>
-	</div>
-	<?= $this->content; ?>
+	<?= $this->content ?>
 </div>
 <?= $this->get_subdocuments_to_html( ) ?>

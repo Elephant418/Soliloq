@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="utf-8">
+  <meta http-equiv="Content-Type" content="Type=text/html; charset=utf-8">
   <title><?= $this->title ?></title>
   <meta name="viewport" content="initial-scale=1.0"> 
   <meta name="creator" content="<?= $this->author ?>"> 
   <style>
   	<?php include( __DIR__ . '/bootstrap.css' ); ?>
+  	<?php include( __DIR__ . '/style.css' ); ?>
   </style>
 </head>
 <body>

@@ -27,7 +27,7 @@ class Document {
 	public function __construct( $path, $datas = NULL ) {
 		$this->init_content( $path );
 		$this->init_datas( $path, $datas );
-		// TODO: Parse subdocument
+		$this->init_subdocuments( $path );
 	}
 	public function to_html( ) {
 		ob_start();	
@@ -52,10 +52,20 @@ class Document {
 		$attribute = 'content_' . $type;
 		$this->$attribute = $this->get_content( $path . '-' . $type );
 	}
+	protected function init_subdocuments( $path ) {
+		print_r( glob( $path . '/*.php' ) );
+		foreach( glob( $path . '/*.php' ) as $subpath ) {
+			$subpath = substr( $subpath, 0, strrpos( $subpath, '.' ) );
+			$this->subdocuments[ ] = self::instance( $subpath );
+		}
+	}
 	protected function init_datas( $path, $datas = NULL ) {
 		$attributes = array_keys( get_object_vars( $this ) );
 		if ( is_null( $datas ) ) {
 			$datas = self::get_datas( $path );
+		}
+		if ( ! is_array( $datas ) ) {
+			$datas = [ ];
 		}
 		foreach ( $datas as $key => $data ) {
 			if ( in_array( $key, $attributes ) ) {
@@ -94,6 +104,9 @@ class Document {
 		$datas_file = $path . '.json';
 		$banned = [ 'content', 'subdocuments' ];
 		$datas = json_decode( file_get_contents( $datas_file ), TRUE );
+		if ( ! is_array( $datas ) ) {
+			$datas = [ ];
+		}
 		foreach ( array_keys( $datas ) as $key ) {
 			if ( in_array( $key, $banned ) ) {
 				unset( $datas[ $key ] );
