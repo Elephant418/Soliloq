@@ -7,27 +7,35 @@ class Document {
 
 
 	/* ATTRIBUTES */
+	protected $id;
+	protected $path;
 	protected $title;
 	protected $author;
 	protected $content;
+	protected $subcontents = [ ];
 	protected $subdocuments = [ ];
 
 
 
 	/* PUBLIC */
-	public static function instance( $path ) {
+	public static function instance( $path, &$parent = NULL ) {
 		$datas = self::get_datas( $path );
 		$class_name = 'Document';
-		if ( isset( $datas[ 'type' ] ) ) {
-			$class_name = $datas[ 'type' ];
+		if ( isset( $datas[ 'doctype' ] ) ) {
+			$class_name = $datas[ 'doctype' ];
 		}
 		$class_name = __NAMESPACE__ . '\\' . $class_name;
-		return new $class_name( $path, $datas );
+		return new $class_name( $path, $datas, $parent );
 	}
-	public function __construct( $path, $datas = NULL ) {
-		$this->init_content( $path );
-		$this->init_datas( $path, $datas );
-		$this->init_subdocuments( $path );
+	public function __construct( $path, $datas = NULL, &$parent = NULL ) {
+		$this->path = $path;
+		$this->init_id( $parent );
+		$this->init_content( );
+		foreach ( $this->subcontents as $type ) {
+			$this->init_subcontent( $type );
+		}
+		$this->init_datas( $datas );
+		$this->init_subdocuments( );
 	}
 	public function to_html( ) {
 		ob_start();	
@@ -45,24 +53,32 @@ class Document {
 
 
 	/* PROTECTED INITIALIZER */
-	protected function init_content( $path ) {
-		$this->content = $this->get_content( $path );
+	protected function init_id( &$parent ) {
+		if ( is_null( $parent ) ) {
+			$id = 'top';
+		} else {
+			$relative_path = substr( $this->path, strlen( $parent->path ) );
+			$id = str_replace( ' ', '_', trim( str_replace( [ '/', '.', '_', '-' ], ' ', $relative_path ) ) );
+		}
+		$this->id = $id;
 	}
-	protected function init_subcontent( $path, $type ) {
+	protected function init_content( ) {
+		$this->content = $this->get_content( $this->path );
+	}
+	protected function init_subcontent( $type ) {
 		$attribute = 'content_' . $type;
-		$this->$attribute = $this->get_content( $path . '-' . $type );
+		$this->$attribute = $this->get_content( $this->path . '-' . $type );
 	}
-	protected function init_subdocuments( $path ) {
-		print_r( glob( $path . '/*.php' ) );
-		foreach( glob( $path . '/*.php' ) as $subpath ) {
+	protected function init_subdocuments( ) {
+		foreach( glob( $this->path . '/*.json' ) as $subpath ) {
 			$subpath = substr( $subpath, 0, strrpos( $subpath, '.' ) );
-			$this->subdocuments[ ] = self::instance( $subpath );
+			$this->subdocuments[ ] = self::instance( $subpath, $this );
 		}
 	}
-	protected function init_datas( $path, $datas = NULL ) {
+	protected function init_datas( $datas = NULL ) {
 		$attributes = array_keys( get_object_vars( $this ) );
 		if ( is_null( $datas ) ) {
-			$datas = self::get_datas( $path );
+			$datas = self::get_datas( $this->path );
 		}
 		if ( ! is_array( $datas ) ) {
 			$datas = [ ];
@@ -102,7 +118,7 @@ class Document {
 	}
 	public static function get_datas( $path ) {
 		$datas_file = $path . '.json';
-		$banned = [ 'content', 'subdocuments' ];
+		$banned = [ 'path', 'content', 'subcontents', 'subdocuments' ];
 		$datas = json_decode( file_get_contents( $datas_file ), TRUE );
 		if ( ! is_array( $datas ) ) {
 			$datas = [ ];

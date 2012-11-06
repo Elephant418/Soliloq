@@ -1,4 +1,4 @@
-<div class="document cover">
+<div class="document cover" id="<?= $this->id ?>">
 	<div class="header">
 		<div class="from">
 			<?= $this->content_from ?>
