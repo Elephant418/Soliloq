@@ -21,22 +21,13 @@ class Document {
 	/* PUBLIC */
 	public static function instance( $path, &$parent = NULL ) {
 		$datas = self::get_datas( $path );
+		$metas = self::get_metas( array_shift( $datas ) ); 
 		$class_name = 'Document';
-		if ( isset( $datas[ 'doctype' ] ) ) {
-			$class_name = $datas[ 'doctype' ];
+		if ( isset( $metas[ 'doctype' ] ) ) {
+			$class_name = $metas[ 'doctype' ];
 		}
 		$class_name = __NAMESPACE__ . '\\' . $class_name;
-		return new $class_name( $path, $datas, $parent );
-	}
-	public function __construct( $path, $datas = NULL, &$parent = NULL ) {
-		$this->path = $path;
-		$this->init_id( $parent );
-		$this->init_content( );
-		foreach ( $this->subcontents as $type ) {
-			$this->init_subcontent( $type );
-		}
-		$this->init_datas( $datas );
-		$this->init_subdocuments( );
+		return new $class_name( $path, $metas, array_shift( $datas ), $datas, $parent );
 	}
 	public function to_html( ) {
 		ob_start();	
@@ -54,6 +45,14 @@ class Document {
 
 
 	/* PROTECTED INITIALIZER */
+	protected function __construct( $path, $metas, $content, $subcontents, &$parent = NULL ) {
+		$this->path = $path;
+		$this->init_id( $parent );
+		$this->init_content( $content );
+		$this->init_subcontent( $subcontents );
+		$this->init_metas( $metas );
+		$this->init_subdocuments( );
+	}
 	protected function init_id( &$parent ) {
 		if ( is_null( $parent ) ) {
 			$id = 'top';
@@ -63,30 +62,28 @@ class Document {
 		}
 		$this->id = $id;
 	}
-	protected function init_content( ) {
-		$this->content = $this->get_content( $this->path );
+	protected function init_content( $content ) {
+		$this->content = Markdown( $content );
 	}
-	protected function init_subcontent( $type ) {
-		$attribute = 'content_' . $type;
-		$this->$attribute = $this->get_content( $this->path . '-' . $type );
+	protected function init_subcontent( $subcontents ) {
+		foreach ( $this->subcontents as $key => $type ) {
+			if ( isset( $subcontents[ $key ] ) ) {
+				$attribute = 'content_' . $type;
+				$this->$attribute = Markdown( $subcontents[ $key ] );
+			}
+		}
 	}
 	protected function init_subdocuments( ) {
-		foreach( glob( $this->path . '/*.json' ) as $subpath ) {
+		foreach( glob( $this->path . '/*.txt' ) as $subpath ) {
 			$subpath = substr( $subpath, 0, strrpos( $subpath, '.' ) );
 			$this->subdocuments[ ] = self::instance( $subpath, $this );
 		}
 	}
-	protected function init_datas( $datas = NULL ) {
+	protected function init_metas( $metas = NULL ) {
 		$attributes = array_keys( get_object_vars( $this ) );
-		if ( is_null( $datas ) ) {
-			$datas = self::get_datas( $this->path );
-		}
-		if ( ! is_array( $datas ) ) {
-			$datas = [ ];
-		}
-		foreach ( $datas as $key => $data ) {
+		foreach ( $metas as $key => $meta ) {
 			if ( in_array( $key, $attributes ) ) {
-				$this->$key = $data;
+				$this->$key = $meta;
 			}
 		}
 	}
@@ -110,25 +107,23 @@ class Document {
 
 
 	/* UTILS */
-	protected function get_content( $path ) {
-		$content_file = $path . '.md';
-		if ( is_file( $content_file ) ) {
-			return Markdown( file_get_contents( $content_file ) );
-		}
-	}
 	public static function get_datas( $path ) {
-		$datas_file = $path . '.json';
+		$content_file = $path . '.txt';
+		$datas = preg_split( '/[\n]+[_]+\n[\n]+/', file_get_contents( $content_file ) );
+		return $datas;
+	}
+	public static function get_metas( $metas_string ) {
 		$banned = [ 'path', 'content', 'subcontents', 'subdocuments' ];
-		$datas = json_decode( file_get_contents( $datas_file ), TRUE );
-		if ( ! is_array( $datas ) ) {
-			$datas = [ ];
+		$metas = json_decode( $metas_string, TRUE );
+		if ( ! is_array( $metas ) ) {
+			$metas = [ ];
 		}
-		foreach ( array_keys( $datas ) as $key ) {
+		foreach ( array_keys( $metas ) as $key ) {
 			if ( in_array( $key, $banned ) ) {
-				unset( $datas[ $key ] );
+				unset( $metas[ $key ] );
 			}
 		}
-		return $datas;
+		return $metas;
 	}
 
 
