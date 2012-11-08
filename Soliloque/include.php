@@ -1,6 +1,6 @@
 <?php
 
-namespace Mug\Printable_Document;
+namespace Pixel418\Soliloque;
 
 
 /* AUTOLOAD */
@@ -26,8 +26,8 @@ require_once( __DIR__ . '/lib/php-markdown/markdown.php' );
 
 
 /* UTILS */
-function template_path( $name ) {
-	$template_path_by_folder = function( $folder, $theme ) use ( $name ) {
+function template_path( $class ) {
+	$template_path_by_folder = function( $folder, $theme, $name ) {
 		$path = $folder . '/theme/' . $theme . '/template/' . $name . '.php';
 		if ( is_file( $path ) ) {
 			return $path;
@@ -35,13 +35,16 @@ function template_path( $name ) {
 		return FALSE;
 	};
 
+	$names = [ $class, 'Document' ];
 	$themes    = defined( 'THEME' ) ? [ THEME ] : [ ];
 	$themes[ ] = 'default';
 	$folders   = [ '.', __DIR__ ];
-	foreach ( $themes as $theme ) {
-		foreach ( $folders as $folder ) {
-			if ( $path = $template_path_by_folder( $folder, $theme ) ) {
-				return $path;
+	foreach ( $names as $name ) {
+		foreach ( $themes as $theme ) {
+			foreach ( $folders as $folder ) {
+				if ( $path = $template_path_by_folder( $folder, $theme, $name ) ) {
+					return $path;
+				}
 			}
 		}
 	}

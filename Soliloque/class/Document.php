@@ -1,6 +1,6 @@
 <?php
 
-namespace Mug\Printable_Document;
+namespace Pixel418\Soliloque;
 
 class Document {
 
@@ -9,6 +9,7 @@ class Document {
 	/* ATTRIBUTES */
 	protected $id;
 	protected $path;
+	protected $doctype;
 	protected $title;
 	protected $author;
 	protected $content;
@@ -114,7 +115,6 @@ class Document {
 		if ( is_file( $content_file ) ) {
 			return Markdown( file_get_contents( $content_file ) );
 		}
-		return '';
 	}
 	public static function get_datas( $path ) {
 		$datas_file = $path . '.json';

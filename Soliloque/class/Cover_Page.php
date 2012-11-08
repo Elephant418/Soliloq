@@ -1,6 +1,6 @@
 <?php
 
-namespace Mug\Printable_Document;
+namespace Pixel418\Soliloque;
 
 class Cover_Page extends Document {
 

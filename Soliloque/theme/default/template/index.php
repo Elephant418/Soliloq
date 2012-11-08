@@ -8,6 +8,11 @@
   <style>
   	<?php include( __DIR__ . '/bootstrap.css' ); ?>
   	<?php include( __DIR__ . '/style.css' ); ?>
+	@page {
+	    @bottom-left {
+	        content: "<?= $this->title ?>";
+	    }
+	}
   </style>
 </head>
 <body>
