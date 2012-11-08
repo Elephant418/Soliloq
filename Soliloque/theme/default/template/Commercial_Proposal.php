@@ -32,7 +32,7 @@
 				<?php
 					echo '<strong>' . $prefix . $document->title . '</strong><br>';
 					echo $document->resume;
-					if ( ! is_null( $document->content ) ) {
+					if ( ! empty( $document->content ) ) {
 						echo ' <a href="#' . $document->id .'">Plus de détails ></a>';
 					}
 				?>

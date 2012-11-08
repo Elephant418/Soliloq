@@ -63,13 +63,13 @@ class Document {
 		$this->id = $id;
 	}
 	protected function init_content( $content ) {
-		$this->content = Markdown( $content );
+		$this->content = trim( Markdown( $content ) );
 	}
 	protected function init_subcontent( $subcontents ) {
 		foreach ( $this->subcontents as $key => $type ) {
 			if ( isset( $subcontents[ $key ] ) ) {
 				$attribute = 'content_' . $type;
-				$this->$attribute = Markdown( $subcontents[ $key ] );
+				$this->$attribute = trim( Markdown( $subcontents[ $key ] ) );
 			}
 		}
 	}
