@@ -9,7 +9,7 @@
 	</div>
 	<?= $this->content ?>
 </div>
-<div class="document resume">
+<div class="document resume" id="_list">
 	<h2>Listes des préstations proposées</h2>
 	<table>
 		<tr>
@@ -33,7 +33,7 @@
 					echo '<strong>' . $prefix . $document->title . '</strong><br>';
 					echo $document->resume;
 					if ( ! empty( $document->content ) ) {
-						echo ' <a href="#' . $document->id .'">Plus de détails ></a>';
+						echo ' <a href="#' . $document->id .'">Plus de détails &rarr;</a>';
 					}
 				?>
 				</td>

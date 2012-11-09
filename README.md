@@ -1,7 +1,7 @@
-Soliloque
+Soliloq
 ==========
 
-*Soliloque* is a PHP project to produce printable document in HTML/CSS.
+Soliloq is a PHP project to produce printable document in HTML/CSS.
 
 
 How do I print my document?
@@ -9,7 +9,7 @@ How do I print my document?
 I advise you to [WeasyPrint](http://weasyprint.org/), the best tool I know to convert HTML/CSS documents to PDF.
 
 
-What does Soliloque mean?
+What does Soliloq mean?
 ----------
 *Soliloque* is an old French word that means somebody who speaks to himself.
 

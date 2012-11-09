@@ -1,6 +1,6 @@
 <?php
 
-namespace Pixel418\Soliloque;
+namespace Pixel418\Soliloq;
 
 class Cover_Page extends Document {
 
