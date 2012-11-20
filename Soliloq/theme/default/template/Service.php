@@ -1,11 +1,11 @@
 <?php
 if ( ! empty( $this->content ) ) {
 ?>
-<div class="document" id="<?= $this->id ?>">
-	<h2><?= $this->title; ?></h2>
-	<?= $this->content; ?>
+<div id="<?= $this->id ?>">
+	<a href="#_list">Retour aux prestations proposées &uarr;</a>
+	<h<?= $this->level + 1 ?>><?= $this->get_prefix( ) . $this->title ?></h<?= $this->level + 1 ?>>
+	<?= $this->content ?>
 	<br>
-	<a href="#_list">Retour aux préstations proposées &uarr;</a>
 </div>
 <?php
 }

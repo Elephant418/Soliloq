@@ -84,15 +84,15 @@ body {
   background-color: #ffffff;
 }
 a {
-  color: #0088cc;
+  color: #A5B7EA;
   text-decoration: none;
 }
 a:hover {
-  color: #005580;
+  color: #A68237;
   text-decoration: underline;
 }
 p {
-  margin: 0 0 10px;
+  margin: 0 0 1.2em;
 }
 small {
   font-size: 85%;
@@ -116,7 +116,7 @@ h6 {
   font-family: inherit;
   font-weight: bold;
   line-height: 20px;
-  color: inherit;
+  color: #A68237;
 }
 h1 small,
 h2 small,
@@ -134,13 +134,13 @@ h3 {
   line-height: 40px;
 }
 h1 {
-  font-size: 38.5px;
+  font-size: 27.5px;
 }
 h2 {
-  font-size: 31.5px;
+  font-size: 23.5px;
 }
 h3 {
-  font-size: 24.5px;
+  font-size: 20.5px;
 }
 h4 {
   font-size: 17.5px;
@@ -280,7 +280,8 @@ table td {
   line-height: 20px;
   text-align: left;
   vertical-align: top;
-  border-top: 1px solid #dddddd;
+  border-top: 1px solid #C0C0C0;
+  background: #F7F8FD;
 }
 table th {
   font-weight: bold;

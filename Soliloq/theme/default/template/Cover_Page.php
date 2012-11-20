@@ -7,6 +7,7 @@
 			<?= $this->content_to ?>
 		</div>
 	</div>
+	<h<?= $this->level ?>><?= $this->title ?></h<?= $this->level ?>>
 	<?= $this->content ?>
 </div>
 <?= $this->get_subdocuments_to_html( ) ?>

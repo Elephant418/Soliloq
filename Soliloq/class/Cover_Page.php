@@ -7,9 +7,9 @@ class Cover_Page extends Document {
 
 
 	/* ATTRIBUTES */
-	protected $subcontents = [ 'from', 'to' ];
-	protected $content_from;
-	protected $content_to;
+	public $subcontents = [ 'from', 'to' ];
+	public $content_from;
+	public $content_to;
 }
 
 ?>

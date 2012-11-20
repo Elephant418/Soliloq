@@ -7,14 +7,15 @@ class Document {
 
 
 	/* ATTRIBUTES */
-	protected $id;
-	protected $path;
-	protected $doctype;
-	protected $title;
-	protected $author;
-	protected $content;
-	protected $subcontents = [ ];
-	protected $subdocuments = [ ];
+	public $id;
+	public $path;
+	public $level = 1;
+	public $doctype;
+	public $title;
+	public $author;
+	public $content;
+	public $subcontents = [ ];
+	public $subdocuments = [ ];
 
 
 
@@ -44,19 +45,27 @@ class Document {
 
 
 
+	/* HOOK TO OVERRIDE */
+	protected function hook_initializer( $parent ) {
+	}
+
+
+
 	/* PROTECTED INITIALIZER */
 	protected function __construct( $path, $metas, $content, $subcontents, &$parent = NULL ) {
 		$this->path = $path;
-		$this->init_id( $parent );
+		$this->init_from_parent( $parent );
 		$this->init_content( $content );
 		$this->init_subcontent( $subcontents );
 		$this->init_metas( $metas );
 		$this->init_subdocuments( );
+		$this->hook_initializer( $parent );
 	}
-	protected function init_id( &$parent ) {
+	protected function init_from_parent( &$parent ) {
 		if ( is_null( $parent ) ) {
 			$id = 'top';
 		} else {
+			$this->level = $parent->level + 1;
 			$relative_path = substr( $this->path, strlen( $parent->path ) );
 			$id = str_replace( ' ', '_', trim( str_replace( [ '/', '.', '_', '-' ], ' ', $relative_path ) ) );
 		}
@@ -90,7 +99,7 @@ class Document {
 
 
 	/* PROTECTED GETTER */
-	private function get_subdocuments_to_html( ) {
+	protected function get_subdocuments_to_html( ) {
 		$html = '';
 		foreach ( $this->subdocuments as $document ) {
 			$html .= $document->to_html( );
@@ -113,7 +122,7 @@ class Document {
 		return $datas;
 	}
 	public static function get_metas( $metas_string ) {
-		$banned = [ 'path', 'content', 'subcontents', 'subdocuments' ];
+		$banned = [ 'path', 'content', 'subcontents', 'subdocuments', 'level' ];
 		$metas = json_decode( $metas_string, TRUE );
 		if ( ! is_array( $metas ) ) {
 			$metas = [ ];
