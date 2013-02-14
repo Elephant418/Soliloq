@@ -6,8 +6,9 @@
   <meta name="viewport" content="initial-scale=1.0"> 
   <meta name="creator" content="<?= $this->author ?>"> 
   <style>
-  	<?php include( __DIR__ . '/bootstrap.css' ); ?>
-  	<?php include( __DIR__ . '/style.css' ); ?>
+  	<?php include( Pixel418\Soliloq\theme_path( 'bootstrap.css' ) ); ?>
+  	<?php include( Pixel418\Soliloq\theme_path( 'style.css' ) ); ?>
+    <?php include( Pixel418\Soliloq\theme_path( 'override.css' ) ); ?>
 	@page {
 	    @bottom-left {
 	        content: "<?= $this->title ?>";

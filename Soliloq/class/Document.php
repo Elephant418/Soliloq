@@ -39,7 +39,7 @@ class Document {
 	}
 	public function to_print( $theme = 'default' ) {
 		define( 'THEME', $theme );
-		require( template_path( 'index' ) );
+		require( theme_path( 'index' ) );
 		die;
 	}
 
@@ -107,7 +107,7 @@ class Document {
 		return $html;
 	}
 	protected function get_template_path( ) {
-		return template_path( $this->get_class_name( ) );
+		return theme_path( $this->get_class_name( ) );
 	}
 	protected function get_class_name( ) {
 		return substr( get_class( $this ), strlen ( __NAMESPACE__ ) + 1 );

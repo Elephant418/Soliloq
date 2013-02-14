@@ -26,6 +26,9 @@
 		?>
 	</table>
 
+	<?php 
+		if ( count( $this->subdocuments_option ) ) {
+	?>
 	<table>
 		<tr>
 			<th>Options</th>
@@ -39,6 +42,9 @@
 		}
 		?>
 	</table>
+	<?php 
+		}
+	?>
 	TVA non applicable, art. 293 B du CGI
 </div>
 <div class="document">

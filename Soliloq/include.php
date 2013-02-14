@@ -26,29 +26,33 @@ require_once( __DIR__ . '/lib/php-markdown/markdown.php' );
 
 
 /* UTILS */
-function template_path( $class ) {
-	$template_path_by_folder = function( $folder, $theme, $name ) {
-		$path = $folder . '/theme/' . $theme . '/template/' . $name . '.php';
+function theme_path( $name, $type = 'template' ) {
+	$theme_path_by_folder = function( $folder, $theme, $name ) use ( $type ) {
+		if ( strpos( $name, '.' ) === FALSE ) {
+			$name .= '.php';
+		}
+
+		$path = $folder . '/theme/' . $theme . '/' . $type . '/' . $name;
 		if ( is_file( $path ) ) {
 			return $path;
 		}
 		return FALSE;
 	};
 
-	$names = [ $class, 'Document' ];
+	$names = [ $name, 'Document' ];
 	$themes    = defined( 'THEME' ) ? [ THEME ] : [ ];
 	$themes[ ] = 'default';
 	$folders   = [ '.', __DIR__ ];
 	foreach ( $names as $name ) {
 		foreach ( $themes as $theme ) {
 			foreach ( $folders as $folder ) {
-				if ( $path = $template_path_by_folder( $folder, $theme, $name ) ) {
+				if ( $path = $theme_path_by_folder( $folder, $theme, $name ) ) {
 					return $path;
 				}
 			}
 		}
 	}
-	throw new \Exception ( 'No template found with the name of "' . $name . '".' );
+	throw new \Exception ( 'No them file found with the name of "' . $name . '".' );
 }
 
 ?>
