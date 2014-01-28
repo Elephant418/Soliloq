@@ -1,4 +1,4 @@
-/*COVER */
+/* COVER */
 .cover .header:after {
   display: block;
   content: " ";
@@ -18,12 +18,17 @@
 .cover h1 {
 	margin-bottom: 1em;
 }
+.cover > p {
+    text-align: justify;
+}
+
 
 /* SERVICE */
 a[href="#_list"] {
   float: right;
   line-height: 40px;
 }
+
 
 /* PAGE */
 .document {
@@ -41,5 +46,19 @@ a[href="#_list"] {
 @page :first {
     @bottom-left {
     	content: "";
+    }
+}
+
+
+/* SCREEN */
+@media screen {
+    html {
+        background: #CCC;
+    }
+    body {
+        background: white;
+        width: 17cm;
+        padding: 2cm;
+        margin: 0 auto;
     }
 }
