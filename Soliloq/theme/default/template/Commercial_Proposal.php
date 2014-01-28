@@ -19,10 +19,12 @@
 			<th>Tarifs</th>
 		</tr>
 		<?php
-		$option = 0;
+        $option = 0;
+		$total = 0;
 		foreach( $this->subdocuments_service as $document ) {
 			include( __DIR__ . '/include/service_table_line.php' );
 		}
+        include( __DIR__ . '/include/service_table_total.php' );
 		?>
 	</table>
 

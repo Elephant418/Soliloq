@@ -42,7 +42,7 @@ function theme_path( $name, $type = 'template' ) {
 	$names = [ $name, 'Document' ];
 	$themes    = defined( 'THEME' ) ? [ THEME ] : [ ];
 	$themes[ ] = 'default';
-	$folders   = [ '.', __DIR__ ];
+	$folders   = [ '.', '..', __DIR__ ];
 	foreach ( $names as $name ) {
 		foreach ( $themes as $theme ) {
 			foreach ( $folders as $folder ) {
