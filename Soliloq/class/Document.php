@@ -54,6 +54,7 @@ class Document {
 	/* PROTECTED INITIALIZER */
 	protected function __construct( $path, $metas, $content, $subcontents, &$parent = NULL ) {
 		$this->path = $path;
+        $this->parent = $parent;
 		$this->init_from_parent( $parent );
 		$this->init_content( $content );
 		$this->init_subcontent( $subcontents );
@@ -83,9 +84,10 @@ class Document {
 		}
 	}
 	protected function init_subdocuments( ) {
-		foreach( glob( $this->path . '/*.txt' ) as $subpath ) {
-			$subpath = substr( $subpath, 0, strrpos( $subpath, '.' ) );
-			$this->subdocuments[ ] = self::instance( $subpath, $this );
+        $filePathList = glob( $this->path . '/*.txt');
+		foreach( $filePathList as $subPath ) {
+			$subPath = substr( $subPath, 0, strrpos( $subPath, '.' ) );
+			$this->subdocuments[ ] = self::instance( $subPath, $this );
 		}
 	}
 	protected function init_metas( $metas = NULL ) {
